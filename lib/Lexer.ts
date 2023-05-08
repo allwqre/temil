@@ -1,4 +1,4 @@
-import { IDENTIFIER_TOKEN_LOOKUP, TOKEN, Token } from "./Token.js";
+import { TOKEN, Token } from "./Token.js";
 
 export class Lexer {
   private tokens: Token[] = [];
@@ -54,10 +54,20 @@ export class Lexer {
   };
 
   private identifier = (): Token => {
-    this.assert(this.peek(), ...Object.keys(IDENTIFIER_TOKEN_LOOKUP));
+    this.assert(this.peek());
 
-    while (this.check(this.peek(), ...Object.keys(IDENTIFIER_TOKEN_LOOKUP)))
-      this.advance();
+    loop: for (let char = this.peek(); this.check(char); char = this.peek()) {
+      switch (char) {
+        case " ":
+        case "\r":
+        case "\t":
+        case "\n":
+          break loop;
+        default:
+          this.advance();
+          break;
+      }
+    }
 
     return new Token(
       TOKEN.IDENTIFIER,
@@ -90,7 +100,6 @@ export class Lexer {
           this.tokens.push(this.literal());
           break;
         default:
-          this.assert(char, ...Object.keys(IDENTIFIER_TOKEN_LOOKUP));
           this.tokens.push(this.identifier());
           break;
       }
