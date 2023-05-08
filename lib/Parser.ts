@@ -1,19 +1,7 @@
+import { Expression } from "./Expression.js";
+import { Identifier } from "./Identifier.js";
+import { Literal } from "./Literal.js";
 import { TOKEN, Token } from "./Token.js";
-
-class Expression {
-  constructor(
-    public readonly identifier: Identifier,
-    public readonly args: (Expression | Literal)[]
-  ) {}
-}
-
-class Identifier {
-  constructor(public readonly value: string) {}
-}
-
-class Literal {
-  constructor(public readonly value: string) {}
-}
 
 export class Parser {
   private index = 0;
