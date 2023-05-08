@@ -42,16 +42,25 @@ export class Parser {
     this.advance();
 
     const args = [];
-    do {
-      const token = this.peek();
-      this.assert(token, TOKEN.LEFT_BRACKET, TOKEN.LITERAL);
+
+    for (
+      let token = this.peek();
+      token?.type !== TOKEN.RIGHT_BRACKET;
+      token = this.peek()
+    ) {
+      this.assert(
+        token,
+        TOKEN.LEFT_BRACKET,
+        TOKEN.RIGHT_BRACKET,
+        TOKEN.LITERAL
+      );
 
       if (token.type === TOKEN.LEFT_BRACKET) args.push(this.expression());
       if (token.type === TOKEN.LITERAL)
         args.push(new Literal(token.literal as string));
 
       this.advance();
-    } while (this.peek()?.type !== TOKEN.RIGHT_BRACKET);
+    }
 
     this.assert(this.peek(), TOKEN.RIGHT_BRACKET);
 

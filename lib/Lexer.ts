@@ -62,6 +62,9 @@ export class Lexer {
         case "\r":
         case "\t":
         case "\n":
+        case "(":
+        case ")":
+        case "'":
           break loop;
         default:
           this.advance();
