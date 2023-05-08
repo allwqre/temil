@@ -4,7 +4,10 @@
     "workspaceFolder": "/workspace",
     "customizations": {
       "vscode": {
-        "extensions": []
+        "extensions": [
+			"dbaeumer.vscode-eslint",
+			"esbenp.prettier-vscode"
+		]
       }
     }
   }

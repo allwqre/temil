@@ -1,0 +1,20 @@
+{
+  "type": "module",
+  "name": "lil-js",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "style": "prettier -w lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "allwqre <github@mail.allwqre.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4"
+  }
+}
