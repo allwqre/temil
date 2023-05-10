@@ -1,5 +1,5 @@
 import { Expression } from "./Expression.js";
-import { Identifier } from "./Identifier.js";
+import { Operator } from "./Operator.js";
 import { Literal } from "./Literal.js";
 import { TOKEN, Token } from "./Token.js";
 
@@ -37,8 +37,8 @@ export class Parser {
     this.assert(this.peek(), TOKEN.LEFT_BRACKET);
     this.advance();
 
-    const identifier_token = this.peek();
-    this.assert(identifier_token, TOKEN.IDENTIFIER);
+    const op_token = this.peek();
+    this.assert(op_token, TOKEN.OPERATOR);
     this.advance();
 
     const args = [];
@@ -64,7 +64,7 @@ export class Parser {
 
     this.assert(this.peek(), TOKEN.RIGHT_BRACKET);
 
-    return new Expression(new Identifier(identifier_token.lexeme), args);
+    return new Expression(new Operator(op_token.lexeme), args);
   };
 
   public run = () => this.expression();

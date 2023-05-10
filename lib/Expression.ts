@@ -1,9 +1,9 @@
-import { Identifier } from "./Identifier.js";
+import { Operator } from "./Operator.js";
 import { Literal } from "./Literal.js";
 
 export class Expression {
   constructor(
-    public readonly identifier: Identifier,
+    public readonly op: Operator,
     public readonly args: (Expression | Literal)[]
   ) {}
 }

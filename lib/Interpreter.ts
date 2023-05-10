@@ -13,9 +13,9 @@ export class Interpreter {
   ) {}
 
   private exec = async (current: Expression): Promise<unknown> => {
-    const callable = this.callable[current.identifier.value];
+    const callable = this.callable[current.op.value];
     if (!callable)
-      throw new Error(`Callable "${current.identifier.value}" not found.`);
+      throw new Error(`Callable "${current.op.value}" not found.`);
     return await callable(this.exec, ...current.args);
   };
 

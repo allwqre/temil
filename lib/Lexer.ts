@@ -53,7 +53,7 @@ export class Lexer {
     );
   };
 
-  private identifier = (): Token => {
+  private operator = (): Token => {
     this.assert(this.peek());
 
     loop: for (let char = this.peek(); this.check(char); char = this.peek()) {
@@ -73,7 +73,7 @@ export class Lexer {
     }
 
     return new Token(
-      TOKEN.IDENTIFIER,
+      TOKEN.OPERATOR,
       this.source.substring(this.start, this.index),
       undefined
     );
@@ -103,7 +103,7 @@ export class Lexer {
           this.tokens.push(this.literal());
           break;
         default:
-          this.tokens.push(this.identifier());
+          this.tokens.push(this.operator());
           break;
       }
     }

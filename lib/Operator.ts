@@ -1,3 +1,3 @@
-export class Identifier {
+export class Operator {
   constructor(public readonly value: string) {}
 }
