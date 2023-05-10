@@ -10,5 +10,6 @@ export * from "./OperatorImpl.js";
 export * from "./Expression.js";
 
 export * from "./Token.js";
+export * from "./Assert.js";
 
 export { Temil as default } from "./Temil.js";

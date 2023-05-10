@@ -2,6 +2,7 @@ import { Interpreter } from "./Interpreter.js";
 import { Lexer } from "./Lexer.js";
 import { OperatorImplLookup } from "./OperatorImpl.js";
 import { Parser } from "./Parser.js";
+import * as assert from "./Assert.js";
 
 export class Temil {
   constructor(
@@ -18,4 +19,6 @@ export class Temil {
     const result = await interpreter.run();
     return result;
   };
+
+  public static assert = assert;
 }
