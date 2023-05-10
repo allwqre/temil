@@ -6,16 +6,17 @@ type Callable = (
   ...args: (Expression | Literal)[]
 ) => Promise<unknown> | unknown;
 
+export type OperatorLookup = Record<string, Callable>;
+
 export class Interpreter {
   constructor(
     private readonly AST: Expression,
-    private readonly callable: Record<string, Callable>
+    private readonly operator_lookup: OperatorLookup
   ) {}
 
   private exec = async (current: Expression): Promise<unknown> => {
-    const callable = this.callable[current.op.value];
-    if (!callable)
-      throw new Error(`Callable "${current.op.value}" not found.`);
+    const callable = this.operator_lookup[current.op.value];
+    if (!callable) throw new Error(`Callable "${current.op.value}" not found.`);
     return await callable(this.exec, ...current.args);
   };
 
