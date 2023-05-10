@@ -1,10 +1,13 @@
 {
   "type": "module",
   "name": "temil",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Tree expression minimal interpreted language.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rm -rf dist && tsc",
     "style": "prettier -w lib",
