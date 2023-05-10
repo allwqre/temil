@@ -1,5 +1,6 @@
-import { Interpreter, OperatorImplLookup } from "./Interpreter.js";
+import { Interpreter } from "./Interpreter.js";
 import { Lexer } from "./Lexer.js";
+import { OperatorImplLookup } from "./OperatorImpl.js";
 import { Parser } from "./Parser.js";
 
 export class Temil {
