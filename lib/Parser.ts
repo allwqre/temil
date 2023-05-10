@@ -33,7 +33,7 @@ export class Parser {
       );
   };
 
-  public expression = (): Expression => {
+  private expression = (): Expression => {
     this.assert(this.peek(), TOKEN.LEFT_BRACKET);
     this.advance();
 
