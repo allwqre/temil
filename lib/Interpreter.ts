@@ -9,7 +9,7 @@ export class Interpreter {
 
   private exec = async (current: Expression): Promise<unknown> => {
     const op_impl = this.lookup[current.op.value];
-    if (!op_impl) throw new Error(`Callable "${current.op.value}" not found.`);
+    if (!op_impl) throw new Error(`Operator "${current.op.value}" not found.`);
     return await op_impl(this.exec, ...current.args);
   };
 
