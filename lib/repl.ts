@@ -5,8 +5,6 @@ import { Temil } from './Temil.js';
 import { Expression } from './Expression.js';
 import { Literal } from './Literal.js';
 
-const inq = readline.createInterface(process.stdin, process.stdout);
-
 const type_num: OperatorImpl = async (exec, ctx, ...args) => {
 	assert_args(args, 1, 'num');
 
@@ -75,19 +73,21 @@ const pipe: OperatorImpl = async (exec, ctx, ...args) => {
 	return await exec(transformed, ctx);
 };
 
-const op_lookup = {
+const ip = new Temil({
 	'|': pipe,
 	num: type_num,
 	str: type_str,
 	'+': math_add,
 	'-': math_sub,
-};
+});
+
+const inq = readline.createInterface(process.stdin, process.stdout);
 
 for (;;) {
 	const input = await inq.question('> ');
 
 	try {
-		const result = await new Temil(input, op_lookup).run();
+		const result = await ip.run(input);
 		console.log(result);
 	} catch (e) {
 		console.error(e);

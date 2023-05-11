@@ -5,10 +5,10 @@ import { Parser } from './Parser.js';
 import * as assert from './Assert.js';
 
 export class Temil {
-	constructor(private readonly source: string, private readonly lookup: OperatorImplLookup) {}
+	constructor(private readonly lookup: OperatorImplLookup) {}
 
-	public run = async () => {
-		const lexer = new Lexer(this.source);
+	public run = async (source: string) => {
+		const lexer = new Lexer(source);
 		const tokens = lexer.run();
 		const parser = new Parser(tokens);
 		const ast = parser.run();
