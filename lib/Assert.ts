@@ -7,7 +7,7 @@ export class AssertionError extends Error {
   }
 }
 
-export const args = (
+export const assert_args = (
   args: (Expression | Literal)[],
   n: number,
   scope: string
@@ -19,7 +19,7 @@ export const args = (
     );
 };
 
-export const args_greater = (
+export const assert_args_greater = (
   args: (Expression | Literal)[],
   n: number,
   scope: string
@@ -31,7 +31,7 @@ export const args_greater = (
     );
 };
 
-export const args_less = (
+export const assert_args_less = (
   args: (Expression | Literal)[],
   n: number,
   scope: string
@@ -43,7 +43,7 @@ export const args_less = (
     );
 };
 
-export const expression: (
+export const assert_expression: (
   value: unknown,
   scope: string
 ) => asserts value is Expression = (value, scope) => {
@@ -54,7 +54,7 @@ export const expression: (
     );
 };
 
-export const literal: (
+export const assert_literal: (
   value: unknown,
   scope: string
 ) => asserts value is Literal = (value, scope) => {
