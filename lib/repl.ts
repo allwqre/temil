@@ -9,16 +9,44 @@ import {
 } from "./Assert.js";
 import { Temil } from "./Temil.js";
 import { Expression } from "./Expression.js";
+import { Literal } from "./Literal.js";
 
 const inq = readline.createInterface(process.stdin, process.stdout);
 
-const type_num: OperatorImpl = (_, ...args) => {
+const type_num: OperatorImpl = async (exec, ...args) => {
   assert_args(args, 1, "num");
 
-  const literal = args[0];
-  assert_literal(literal, "num");
+  const arg = args[0];
+  if (arg instanceof Expression) return Number(await exec(arg)).valueOf();
+  if (arg instanceof Literal) return Number(arg.value).valueOf();
 
-  return Number(literal.value).valueOf();
+  throw new AssertionError("num");
+};
+
+const assert_num: (value: unknown, scope: string) => asserts value is number = (
+  value,
+  scope
+) => {
+  if (typeof value !== "number")
+    throw new AssertionError(scope, `Expected ${value} to be type of number.`);
+};
+
+const type_str: OperatorImpl = async (exec, ...args) => {
+  assert_args(args, 1, "str");
+
+  const arg = args[0];
+  if (arg instanceof Expression) return String(await exec(arg)).valueOf();
+  if (arg instanceof Literal) return String(arg.value).valueOf();
+
+  throw new AssertionError("str");
+};
+
+const assert_str: (value: unknown, scope: string) => asserts value is number = (
+  value,
+  scope
+) => {
+  if (typeof value !== "string")
+    throw new AssertionError(scope, `Expected ${value} to be type of string.`);
 };
 
 const math_add: OperatorImpl = async (exec, ...args) => {
@@ -29,16 +57,8 @@ const math_add: OperatorImpl = async (exec, ...args) => {
   assert_expression(b, "+");
   const result_a = await exec(a);
   const result_b = await exec(b);
-  if (typeof result_a !== "number")
-    throw new AssertionError(
-      "+",
-      `Expected first argument to resolve to type number.`
-    );
-  if (typeof result_b !== "number")
-    throw new AssertionError(
-      "+",
-      `Expected first argument to resolve to type number.`
-    );
+  assert_num(result_a, "+");
+  assert_num(result_b, "+");
 
   return result_a + result_b;
 };
@@ -51,16 +71,8 @@ const math_sub: OperatorImpl = async (exec, ...args) => {
   assert_expression(b, "-");
   const result_a = await exec(a);
   const result_b = await exec(b);
-  if (typeof result_a !== "number")
-    throw new AssertionError(
-      "-",
-      `Expected first argument to resolve to type number.`
-    );
-  if (typeof result_b !== "number")
-    throw new AssertionError(
-      "-",
-      `Expected first argument to resolve to type number.`
-    );
+  assert_num(result_a, "-");
+  assert_num(result_b, "-");
 
   return result_a - result_b;
 };
@@ -80,6 +92,7 @@ const pipe: OperatorImpl = async (exec, ...args) => {
 const op_lookup = {
   "|": pipe,
   num: type_num,
+  str: type_str,
   "+": math_add,
   "-": math_sub,
 };
