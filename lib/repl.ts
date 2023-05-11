@@ -67,17 +67,16 @@ const math_sub: OperatorImpl = async (exec, ...args) => {
 
 const pipe: OperatorImpl = async (exec, ...args) => {
   assert_args_greater(args, 0, "|");
-  for (const arg of args) assert_expression(arg, "|");
 
-  const copy = [...args] as Expression[];
+  const expressions = args.map((arg) => {
+    assert_expression(arg, "|");
+    return arg;
+  });
 
-  const last = copy.pop();
-  assert_expression(last, "|");
-
-  const transformed = copy.reverse().reduce((acc, cur) => {
-    acc.args.push(cur);
-    return acc;
-  }, last);
+  const transformed = expressions.reduce((acc, cur) => {
+    cur.args.push(acc);
+    return cur;
+  });
 
   return await exec(transformed);
 };
