@@ -1,13 +1,10 @@
 {
-    "dockerComposeFile": "compose.yaml",
-    "service": "devcontainer",
-    "workspaceFolder": "/workspace",
-    "customizations": {
-      "vscode": {
-        "extensions": [
-			"dbaeumer.vscode-eslint",
-			"esbenp.prettier-vscode"
-		]
-      }
-    }
-  }
+	"dockerComposeFile": "compose.yaml",
+	"service": "devcontainer",
+	"workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {
+			"extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+		}
+	}
+}

@@ -1,23 +1,23 @@
 {
-  "type": "module",
-  "name": "temil",
-  "version": "0.0.4",
-  "description": "Tree expression minimal interpreted language.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "rm -rf dist && tsc",
-    "style": "prettier -w lib",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "allwqre <github@mail.allwqre.dev>",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^20.1.2",
-    "prettier": "^2.8.8",
-    "typescript": "^5.0.4"
-  }
+	"type": "module",
+	"name": "temil",
+	"version": "0.0.5",
+	"description": "Tree expression minimal interpreted language.",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "rm -rf dist && tsc",
+		"style": "prettier -w lib",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "allwqre <github@mail.allwqre.dev>",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^20.1.2",
+		"prettier": "^2.8.8",
+		"typescript": "^5.0.4"
+	}
 }
