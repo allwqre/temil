@@ -1,3 +1,3 @@
 export class Operator {
-  constructor(public readonly value: string) {}
+	constructor(public readonly value: string) {}
 }
