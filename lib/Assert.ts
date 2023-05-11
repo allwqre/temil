@@ -43,6 +43,18 @@ export const assert_args_less = (
     );
 };
 
+export const assert_instanceof: <T extends Function>(
+  value: unknown,
+  cls: T,
+  scope: string
+) => asserts value is T = (value, cls, scope) => {
+  if (!(value instanceof cls))
+    throw new AssertionError(
+      scope,
+      `Expected ${value} to be instance of ${cls.name}.`
+    );
+};
+
 export const assert_expression: (
   value: unknown,
   scope: string
