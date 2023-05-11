@@ -24,7 +24,7 @@ export const assert_args_greater = (
   n: number,
   scope: string
 ) => {
-  if (args.length > n)
+  if (args.length <= n)
     throw new AssertionError(
       scope,
       `Expected more than ${n} args but got ${args.length}.`
@@ -36,7 +36,7 @@ export const assert_args_less = (
   n: number,
   scope: string
 ) => {
-  if (args.length < n)
+  if (args.length >= n)
     throw new AssertionError(
       scope,
       `Expected less than ${n} args but got ${args.length}.`
