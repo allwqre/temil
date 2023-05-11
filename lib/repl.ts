@@ -41,7 +41,7 @@ const type_str: OperatorImpl = async (exec, ...args) => {
   throw new AssertionError("str");
 };
 
-const assert_str: (value: unknown, scope: string) => asserts value is number = (
+const assert_str: (value: unknown, scope: string) => asserts value is string = (
   value,
   scope
 ) => {
