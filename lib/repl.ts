@@ -3,10 +3,12 @@ import { OperatorImpl } from "./OperatorImpl.js";
 import {
   AssertionError,
   assert_args,
+  assert_args_greater,
   assert_expression,
   assert_literal,
 } from "./Assert.js";
 import { Temil } from "./Temil.js";
+import { Expression } from "./Expression.js";
 
 const inq = readline.createInterface(process.stdin, process.stdout);
 
@@ -63,7 +65,25 @@ const math_sub: OperatorImpl = async (exec, ...args) => {
   return result_a - result_b;
 };
 
+const pipe: OperatorImpl = async (exec, ...args) => {
+  assert_args_greater(args, 0, "|");
+  for (const arg of args) assert_expression(arg, "|");
+
+  const copy = [...args] as Expression[];
+
+  const last = copy.pop();
+  assert_expression(last, "|");
+
+  const transformed = copy.reverse().reduce((acc, cur) => {
+    acc.args.push(cur);
+    return acc;
+  }, last);
+
+  return await exec(transformed);
+};
+
 const op_lookup = {
+  "|": pipe,
   num: type_num,
   "+": math_add,
   "-": math_sub,
