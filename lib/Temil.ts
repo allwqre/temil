@@ -7,7 +7,7 @@ import * as assert from './Assert.js';
 export class Temil {
 	constructor(private readonly lookup: OperatorImplLookup) {}
 
-	public run = async (source: string, context: Context) => {
+	public run = async (source: string, context: Context = {}) => {
 		const lexer = new Lexer(source);
 		const tokens = lexer.run();
 		const parser = new Parser(tokens);
