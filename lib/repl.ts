@@ -87,7 +87,7 @@ for (;;) {
 	const input = await inq.question('> ');
 
 	try {
-		const result = await ip.run(input);
+		const result = await ip.async(input);
 		console.log(result);
 	} catch (e) {
 		console.error(e);
