@@ -13,7 +13,7 @@ export class Temil {
 		const parser = new Parser(tokens);
 		const ast = parser.run();
 		const interpreter = new Interpreter(ast, this.lookup, context);
-		const result = await interpreter.run();
+		const result = await interpreter.async();
 		return result;
 	};
 
