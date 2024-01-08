@@ -10,8 +10,9 @@ In concept, Temil is just a definition of how to structure expressions, everythi
 
 ## EBNF
 ```ebnf
+whitespace = " " ;
 operator = STRING ;
-literal = "'", STRING, "'" ;
+literal = [ "'" ], STRING, [ "'" ];
 expression = "(", ( operator, { expression | literal } ), ")" ;
 ```
 

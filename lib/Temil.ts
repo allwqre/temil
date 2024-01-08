@@ -1,31 +1,14 @@
-import { Interpreter } from './Interpreter.js';
-import { Lexer } from './Lexer.js';
-import { Context, OperatorImplLookup } from './OperatorImpl.js';
-import { Parser } from './Parser.js';
-import * as assert from './Assert.js';
+import { Interpreter } from './Interpreter';
+import { Lexer } from './Lexer';
+import { Lookup } from './types';
+import { Parser } from './Parser';
 
-export class Temil {
-	constructor(private readonly lookup: OperatorImplLookup) {}
+export class Temil<T> {
+	constructor(private readonly lookup: Lookup<T>) {}
 
-	public sync = (source: string, context: Context = {}) => {
-		const lexer = new Lexer(source);
-		const tokens = lexer.run();
-		const parser = new Parser(tokens);
-		const ast = parser.run();
-		const interpreter = new Interpreter(ast, this.lookup, context);
-		const result = interpreter.sync();
-		return result;
+	public eval = (source: string, context: T) => {
+		const tokens = new Lexer(source).lex();
+		const ast = new Parser(tokens).parse();
+		return new Interpreter(this.lookup).exec(ast, context);
 	};
-
-	public async = async (source: string, context: Context = {}) => {
-		const lexer = new Lexer(source);
-		const tokens = lexer.run();
-		const parser = new Parser(tokens);
-		const ast = parser.run();
-		const interpreter = new Interpreter(ast, this.lookup, context);
-		const result = await interpreter.async();
-		return result;
-	};
-
-	public static assert = assert;
 }

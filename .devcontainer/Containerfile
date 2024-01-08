@@ -1,21 +1,28 @@
-FROM alpine:edge
+FROM fedora:latest
 
 ARG USERNAME=dev
 ARG UID=1000
 ARG GID=$UID
 
-RUN apk add \
-    git \
-    gpg \
-    openssh \
-    sudo
+RUN dnf install -y sudo
 
-RUN adduser -D -u $UID -g $GID $USERNAME \
-    && addgroup $USERNAME wheel \
-    && sed -i 's/# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/g' /etc/sudoers
+RUN groupadd -g $GID $USERNAME \
+    && useradd -m -u $UID -g $GID $USERNAME \
+    && usermod -aG wheel $USERNAME \
+    && echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-COPY extra-packages /
-RUN apk add $(cat /extra-packages)
-RUN rm /extra-packages
+COPY lifecycle /tmp
+
+COPY extra-packages /tmp
+RUN dnf install -y $(cat /tmp/extra-packages)
+
+COPY extra-setup /tmp
+RUN chmod o+x /tmp/extra-setup
+RUN . /tmp/extra-setup
 
 USER $USERNAME
+
+COPY user-setup /tmp
+RUN sudo chown $USERNAME:$USERNAME /tmp/user-setup
+RUN chmod o+x /tmp/user-setup 
+RUN . /tmp/user-setup

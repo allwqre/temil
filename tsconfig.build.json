@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"lib": ["ESNext"],
+		"module": "esnext",
+		"target": "esnext",
+		"declaration": true,
+		"noEmit": false,
+		"emitDeclarationOnly": true,
+		"rootDir": "lib",
+		"outDir": "dist"
+	},
+	"include": ["./lib/**/*"]
+}

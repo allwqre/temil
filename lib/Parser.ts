@@ -1,54 +1,40 @@
-import { Expression } from './Expression.js';
-import { Operator } from './Operator.js';
-import { Literal } from './Literal.js';
-import { TOKEN, Token } from './Token.js';
+import { TOK, Token, Expression, ARG, Operator, Argument } from './types';
 
 export class Parser {
-	private index = 0;
-
 	constructor(private readonly tokens: Token[]) {}
 
-	private advance = () => ++this.index;
+	public parse = (): Expression => {
+		let cursor = 0;
+		const stack: [Operator | null, Argument[]][] = [];
+		let current_op: Operator | null = null;
+		let current_args: Argument[] = [];
 
-	private peek = (n?: number) => this.tokens.at(this.index + (n ?? 0));
-
-	private assert: (token: Token | undefined, ...expected: TOKEN[]) => asserts token is Token = (
-		token: Token | undefined,
-		...expected: TOKEN[]
-	) => {
-		if (token === undefined)
-			throw new Error(`Token not found. Expected one of [${expected.map((type) => TOKEN[type]).join(', ')}].`);
-		if (expected.length > 0 && !expected.some((ex) => token.type === ex))
-			throw new Error(
-				`Unexpected token. Expected one of [${expected.map((type) => TOKEN[type]).join(', ')}] but got ${
-					TOKEN[token.type]
-				}.`,
-			);
-	};
-
-	private expression = (): Expression => {
-		this.assert(this.peek(), TOKEN.LEFT_BRACKET);
-		this.advance();
-
-		const op_token = this.peek();
-		this.assert(op_token, TOKEN.OPERATOR);
-		this.advance();
-
-		const args = [];
-
-		for (let token = this.peek(); token?.type !== TOKEN.RIGHT_BRACKET; token = this.peek()) {
-			this.assert(token, TOKEN.LEFT_BRACKET, TOKEN.RIGHT_BRACKET, TOKEN.LITERAL);
-
-			if (token.type === TOKEN.LEFT_BRACKET) args.push(this.expression());
-			if (token.type === TOKEN.LITERAL) args.push(new Literal(token.literal as string));
-
-			this.advance();
+		while (cursor < this.tokens.length) {
+			const token = this.tokens[cursor];
+			switch (token[0]) {
+				case TOK.L_PAR:
+					stack.push([current_op, current_args]);
+					current_op = null;
+					current_args = [];
+					break;
+				case TOK.STR:
+					if (!current_op) current_op = token[1];
+					else current_args.push([ARG.LIT, token[1]]);
+					break;
+				case TOK.R_PAR:
+					if (current_op === null) throw new Error();
+					const expr = [current_op, current_args] as const;
+					const prev = stack.pop();
+					if (!prev || prev[0] === null) return expr;
+					current_op = prev[0];
+					current_args = prev[1];
+					current_args.push([ARG.EXP, expr]);
+					break;
+				default:
+					throw new Error('unreachable');
+			}
+			cursor += 1;
 		}
-
-		this.assert(this.peek(), TOKEN.RIGHT_BRACKET);
-
-		return new Expression(new Operator(op_token.lexeme), args);
+		throw new Error('Unexpected EOE.');
 	};
-
-	public run = () => this.expression();
 }

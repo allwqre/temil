@@ -1,98 +1,56 @@
-import { TOKEN, Token } from './Token.js';
+import { TOK, Token } from './types';
 
 export class Lexer {
 	private tokens: Token[] = [];
 	private start = 0;
-	private index = 0;
+	private cursor = 0;
 
 	constructor(private readonly source: string) {}
 
-	private advance = () => ++this.index;
+	private next = (keep_buffer?: true) => (keep_buffer ? ++this.cursor : (this.start = ++this.cursor));
 
-	private peek = (n?: number) => this.source.at(this.index + (n ?? 0));
+	private peek = (n: number = 0) => this.source.at(this.cursor + n);
 
-	private assert: (char: string | undefined, ...expected: string[]) => asserts char is string = (char, ...expected) => {
-		if (char === undefined)
-			throw new Error(`Character not found. Expected one of [${expected.join(' ')}] at position ${this.index}.`);
-		if (expected.length > 0 && !expected.some((ex) => char === ex))
-			throw new Error(
-				`Unexpected character. Expected one of [${expected.join(' ')}] but got ${char} at position ${this.index}.`,
-			);
+	private read_token = (type: TOK) => {
+		this.tokens.push([type, this.source.slice(this.start, this.cursor + 1)]);
+		this.next();
 	};
 
-	private check = (char?: string, ...expected: string[]) => {
-		if (char === undefined) return false;
-		if (expected.length > 0 && !expected.some((ex) => char === ex)) return false;
-		return true;
+	private expect = (c: string | undefined, ...e: string[]) => {
+		if (c === undefined) throw new Error('Unexpected EOS.');
+		return e.some((v) => c === v);
 	};
 
-	private literal = (): Token => {
-		this.assert(this.peek(), "'");
-		this.advance();
+	public lex = () => {
+		this.tokens = [];
+		this.start = 0;
+		this.cursor = 0;
 
-		while (!this.check(this.peek(), "'") && this.check(this.peek())) this.advance();
-
-		this.assert(this.peek(), "'");
-		this.advance();
-
-		return new Token(
-			TOKEN.LITERAL,
-			this.source.substring(this.start, this.index),
-			String(this.source.substring(this.start + 1, this.index - 1)),
-		);
-	};
-
-	private operator = (): Token => {
-		this.assert(this.peek());
-
-		loop: for (let char = this.peek(); this.check(char); char = this.peek()) {
-			switch (char) {
+		while (this.peek() !== undefined)
+			switch (this.peek()) {
 				case ' ':
 				case '\r':
 				case '\t':
 				case '\n':
-				case '(':
-				case ')':
-				case "'":
-					break loop;
-				default:
-					this.advance();
-					break;
-			}
-		}
-
-		return new Token(TOKEN.OPERATOR, this.source.substring(this.start, this.index), undefined);
-	};
-
-	public run = () => {
-		while (this.check(this.peek())) {
-			this.start = this.index;
-			const char = this.peek();
-
-			switch (char) {
-				case ' ':
-				case '\r':
-				case '\t':
-				case '\n':
-					this.advance();
+					this.next();
 					break;
 				case '(':
-					this.tokens.push(new Token(TOKEN.LEFT_BRACKET, char, undefined));
-					this.advance();
+					this.read_token(TOK.L_PAR);
 					break;
 				case ')':
-					this.tokens.push(new Token(TOKEN.RIGHT_BRACKET, char, undefined));
-					this.advance();
+					this.read_token(TOK.R_PAR);
 					break;
 				case "'":
-					this.tokens.push(this.literal());
+					this.next();
+					while (!this.expect(this.peek(1), "'")) this.next(true);
+					this.read_token(TOK.STR);
+					this.next();
 					break;
 				default:
-					this.tokens.push(this.operator());
+					while (!this.expect(this.peek(1), ' ', ')')) this.next(true);
+					this.read_token(TOK.STR);
 					break;
 			}
-		}
-
 		return this.tokens;
 	};
 }

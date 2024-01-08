@@ -1,23 +1,16 @@
 {
-	"type": "module",
-	"name": "temil",
-	"version": "0.0.9",
-	"description": "Tree expression minimal interpreted language.",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"files": [
-		"dist"
-	],
-	"scripts": {
-		"build": "rm -rf dist && tsc",
-		"style": "prettier -w lib",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"author": "allwqre <github@mail.allwqre.dev>",
-	"license": "MIT",
-	"devDependencies": {
-		"@types/node": "^20.1.2",
-		"prettier": "^2.8.8",
-		"typescript": "^5.0.4"
-	}
+  "name": "temil",
+  "version": "0.0.6",
+  "module": "lib/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun run build:source && bun run build:types",
+    "build:source": "bun build lib/index.ts --minify --target node --outdir dist",
+    "build:types": "tsc -p tsconfig.build.json"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  }
 }
