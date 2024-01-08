@@ -4,6 +4,7 @@
 		"lib": ["ESNext"],
 		"module": "esnext",
 		"target": "esnext",
+		"moduleResolution": "bundler",
 		"declaration": true,
 		"noEmit": false,
 		"emitDeclarationOnly": true,
