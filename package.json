@@ -1,7 +1,11 @@
 {
   "name": "temil",
-  "version": "0.0.6",
-  "module": "lib/index.ts",
+  "version": "0.0.7",
+  "main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
   "type": "module",
   "scripts": {
     "build": "bun run build:source && bun run build:types",
