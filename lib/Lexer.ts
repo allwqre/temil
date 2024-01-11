@@ -1,56 +1,48 @@
+import { UnexpectedEndOfStringError } from './Error';
 import { TOK, Token } from './types';
 
 export class Lexer {
-	private tokens: Token[] = [];
-	private start = 0;
-	private cursor = 0;
+	public lex = (source: string) => {
+		let tokens: Token[] = [];
+		let start = 0;
+		let cursor = 0;
 
-	constructor(private readonly source: string) {}
+		const next = (keep_buffer?: true) => (keep_buffer ? ++cursor : (start = ++cursor));
+		const peek = (n: number = 0) => source.at(cursor + n);
+		const read_token = (type: TOK) => {
+			tokens.push([type, source.slice(start, cursor + 1)]);
+			next();
+		};
+		const expect = (c: string | undefined, ...e: string[]) => {
+			if (c === undefined) throw new UnexpectedEndOfStringError();
+			return e.some((v) => c === v);
+		};
 
-	private next = (keep_buffer?: true) => (keep_buffer ? ++this.cursor : (this.start = ++this.cursor));
-
-	private peek = (n: number = 0) => this.source.at(this.cursor + n);
-
-	private read_token = (type: TOK) => {
-		this.tokens.push([type, this.source.slice(this.start, this.cursor + 1)]);
-		this.next();
-	};
-
-	private expect = (c: string | undefined, ...e: string[]) => {
-		if (c === undefined) throw new Error('Unexpected EOS.');
-		return e.some((v) => c === v);
-	};
-
-	public lex = () => {
-		this.tokens = [];
-		this.start = 0;
-		this.cursor = 0;
-
-		while (this.peek() !== undefined)
-			switch (this.peek()) {
+		while (peek() !== undefined)
+			switch (peek()) {
 				case ' ':
 				case '\r':
 				case '\t':
 				case '\n':
-					this.next();
+					next();
 					break;
 				case '(':
-					this.read_token(TOK.L_PAR);
+					read_token(TOK.L_PAR);
 					break;
 				case ')':
-					this.read_token(TOK.R_PAR);
+					read_token(TOK.R_PAR);
 					break;
 				case "'":
-					this.next();
-					while (!this.expect(this.peek(1), "'")) this.next(true);
-					this.read_token(TOK.STR);
-					this.next();
+					next();
+					while (!expect(peek(1), "'")) next(true);
+					read_token(TOK.STR);
+					next();
 					break;
 				default:
-					while (!this.expect(this.peek(1), ' ', ')')) this.next(true);
-					this.read_token(TOK.STR);
+					while (!expect(peek(1), ' ', ')')) next(true);
+					read_token(TOK.STR);
 					break;
 			}
-		return this.tokens;
+		return tokens;
 	};
 }

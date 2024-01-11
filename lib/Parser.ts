@@ -1,16 +1,17 @@
-import { TOK, Token, Expression, ARG, Operator, Argument } from './types';
+import { UnexpectedEndOfExpressionError, UnknownOperatorError, UnreachableError } from './Error';
+import { TOK, Token, Expression, ARG, Argument, LookupIndex, TranslationTable } from './types';
 
 export class Parser {
-	constructor(private readonly tokens: Token[]) {}
+	constructor(private readonly translation_table: TranslationTable) {}
 
-	public parse = (): Expression => {
+	public parse = (tokens: Token[]): Expression => {
 		let cursor = 0;
-		const stack: [Operator | null, Argument[]][] = [];
-		let current_op: Operator | null = null;
+		const stack: [LookupIndex | null, Argument[]][] = [];
+		let current_op: LookupIndex | null = null;
 		let current_args: Argument[] = [];
 
-		while (cursor < this.tokens.length) {
-			const token = this.tokens[cursor];
+		while (cursor < tokens.length) {
+			const token = tokens[cursor];
 			switch (token[0]) {
 				case TOK.L_PAR:
 					stack.push([current_op, current_args]);
@@ -18,7 +19,9 @@ export class Parser {
 					current_args = [];
 					break;
 				case TOK.STR:
-					if (!current_op) current_op = token[1];
+					if (current_op === null)
+						if (this.translation_table[token[1]] === undefined) throw new UnknownOperatorError(token[1]);
+						else current_op = this.translation_table[token[1]];
 					else current_args.push([ARG.LIT, token[1]]);
 					break;
 				case TOK.R_PAR:
@@ -31,10 +34,10 @@ export class Parser {
 					current_args.push([ARG.EXP, expr]);
 					break;
 				default:
-					throw new Error('unreachable');
+					throw new UnreachableError();
 			}
 			cursor += 1;
 		}
-		throw new Error('Unexpected EOE.');
+		throw new UnexpectedEndOfExpressionError();
 	};
 }
