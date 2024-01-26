@@ -39,7 +39,7 @@ export class Lexer {
 					next();
 					break;
 				default:
-					while (!expect(peek(1), ' ', ')')) next(true);
+					while (!expect(peek(1), ' ', ')', '\r', '\t', '\n')) next(true);
 					read_token(TOK.STR);
 					break;
 			}
