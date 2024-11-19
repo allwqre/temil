@@ -1,20 +1,20 @@
 {
-  "name": "temil",
-  "version": "0.0.12",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "type": "module",
-  "scripts": {
-    "build": "bun run build:source && bun run build:types",
-    "build:source": "bun build lib/index.ts --minify --target node --outdir dist",
-    "build:types": "tsc -p tsconfig.build.json"
-  },
-  "devDependencies": {
-    "bun-types": "latest",
-    "prettier": "^3.2.4",
-    "typescript": "^5.3.3"
-  }
+	"name": "temil",
+	"version": "0.0.13",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"scripts": {
+		"build": "bun run build:source && bun run build:types",
+		"build:source": "bun build lib/index.ts --minify --target node --outdir dist",
+		"build:types": "tsc -p tsconfig.build.json"
+	},
+	"devDependencies": {
+		"bun-types": "latest",
+		"prettier": "^3.3.3",
+		"typescript": "^5.6.3"
+	}
 }

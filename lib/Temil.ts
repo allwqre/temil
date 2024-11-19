@@ -1,6 +1,6 @@
 import { Interpreter } from './Interpreter';
 import { Lexer } from './Lexer';
-import { Expression, ImplementationObject, Token, TranslationTable } from './types';
+import { Argument, ImplementationObject, Token, TranslationTable } from './types';
 import { Parser } from './Parser';
 
 export class Temil<T> {
@@ -22,7 +22,7 @@ export class Temil<T> {
 
 	public parse = (tokens: Token[]) => this.parser.parse(tokens);
 
-	public interpret = (ast: Expression, ctx: T) => this.interpreter.interpret(ast, ctx);
+	public interpret = (ast: Argument, ctx: T) => this.interpreter.interpret(ast, ctx);
 
 	public eval = (source: string, context: T) =>
 		this.interpreter.interpret(this.parser.parse(this.lexer.lex(source)), context);

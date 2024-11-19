@@ -1,24 +1,19 @@
 import { Temil, Implementation } from './lib/index';
-import { is_expression } from './lib/utils';
 
 const str: Implementation = (exec, ctx, args) => {
 	if (args.length !== 1) throw new Error();
-	if (is_expression(args[0])) return exec(args[0][1], ctx);
-	return args[0][1];
+	return exec(args[0], ctx);
 };
 
 const num: Implementation = (exec, ctx, args) => {
 	if (args.length !== 1) throw new Error();
-	if (is_expression(args[0])) return Number(exec(args[0][1], ctx));
-	return Number(args[0][1]);
+	return Number(exec(args[0], ctx));
 };
 
 const add: Implementation = (exec, ctx, args) => {
 	if (args.length !== 2) throw new Error();
-	if (!is_expression(args[0])) throw new Error();
-	if (!is_expression(args[1])) throw new Error();
-	const a = exec(args[0][1], ctx);
-	const b = exec(args[1][1], ctx);
+	const a = exec(args[0], ctx);
+	const b = exec(args[1], ctx);
 	if (typeof a !== 'number') throw new Error();
 	if (typeof b !== 'number') throw new Error();
 	return a + b;

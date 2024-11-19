@@ -1,10 +1,10 @@
 import { UnexpectedEndOfExpressionError, UnknownOperatorError, UnreachableError } from './Error';
-import { TOK, Token, Expression, ARG, Argument, LookupIndex, TranslationTable } from './types';
+import { TOK, Token, ARG, Argument, LookupIndex, TranslationTable } from './types';
 
 export class Parser {
 	constructor(private readonly translation_table: TranslationTable) {}
 
-	public parse = (tokens: Token[]): Expression => {
+	public parse = (tokens: Token[]): Argument => {
 		let cursor = 0;
 		const stack: [LookupIndex | null, Argument[]][] = [];
 		let current_op: LookupIndex | null = null;
@@ -25,10 +25,10 @@ export class Parser {
 					else current_args.push([ARG.LIT, token[1]]);
 					break;
 				case TOK.R_PAR:
-					if (current_op === null) throw new Error();
+					if (current_op === null) throw new UnexpectedEndOfExpressionError();
 					const expr = [current_op, current_args] as const;
 					const prev = stack.pop();
-					if (!prev || prev[0] === null) return expr;
+					if (!prev || prev[0] === null) return [ARG.EXP, expr];
 					current_op = prev[0];
 					current_args = prev[1];
 					current_args.push([ARG.EXP, expr]);
