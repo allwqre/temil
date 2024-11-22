@@ -25,7 +25,7 @@ const ip = new Temil(
 		num,
 		add,
 	},
-	[[/^\d+$/, (v) => new Number(v).valueOf()]],
+	[[/^-?\d+$/, (v) => new Number(v).valueOf()]],
 );
 
 console.write('>');

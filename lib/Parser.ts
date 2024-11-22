@@ -12,30 +12,30 @@ export class Parser {
 	};
 
 	public parse = (tokens: Token[]): Argument => {
-		const stack: [string | null, Argument[]][] = [];
+		const stack: [op: string | null, args: Argument[]][] = [];
 		let cursor = 0;
-		let current_op: string | null = null;
-		let current_args: Argument[] = [];
+		let op: string | null = null;
+		let args: Argument[] = [];
 
 		while (cursor < tokens.length) {
 			const token = tokens[cursor];
 			switch (token[0]) {
 				case TOK.L_PAR:
-					stack.push([current_op, current_args]);
-					current_op = null;
-					current_args = [];
+					stack.push([op, args]);
+					op = null;
+					args = [];
 					break;
 				case TOK.STR:
-					if (current_op === null) current_op = token[1];
-					else current_args.push([ARG.LIT, this.coerce(token[1])]);
+					if (op === null) op = token[1];
+					else args.push([ARG.LIT, this.coerce(token[1])]);
 					break;
 				case TOK.R_PAR:
-					if (current_op === null) throw ERROR[ERROR.UNEXPECTED_END_OF_EXPRESSION];
+					if (op === null) throw ERROR[ERROR.UNEXPECTED_END_OF_EXPRESSION];
 					const prev = stack.pop();
-					if (!prev || prev[0] === null) return [ARG.EXP, current_op, current_args];
-					current_op = prev[0];
-					current_args = prev[1];
-					current_args.push([ARG.EXP, current_op, current_args]);
+					if (!prev || prev[0] === null) return [ARG.EXP, op, args];
+					prev[1].push([ARG.EXP, op, args]);
+					op = prev[0];
+					args = prev[1];
 					break;
 				default:
 					throw ERROR[ERROR.UNREACHABLE];
