@@ -1,9 +1,10 @@
 import { UnexpectedEndOfStringError } from './Error';
-import { TOK, Token } from './types';
+import { TOK } from './enums';
+import { Token } from './types';
 
 export class Lexer {
 	public lex = (source: string) => {
-		let tokens: Token[] = [];
+		const tokens: Token[] = [];
 		let start = 0;
 		let cursor = 0;
 

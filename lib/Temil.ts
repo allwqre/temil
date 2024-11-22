@@ -1,21 +1,17 @@
-import { Interpreter } from './Interpreter';
 import { Lexer } from './Lexer';
-import { Argument, ImplementationObject, Token, TranslationTable } from './types';
 import { Parser } from './Parser';
+import { Interpreter } from './Interpreter';
+import type { Argument, Lookup, Token } from './types';
 
 export class Temil<T> {
 	private readonly lexer;
 	private readonly parser;
 	private readonly interpreter;
 
-	constructor(private readonly implementations: ImplementationObject<T>) {
-		const entries = Object.entries(this.implementations);
-		const translation_table = entries.reduce((acc, [op], idx) => ((acc[op] = idx), acc), {} as TranslationTable);
-		const lookup_table = entries.map(([, impl]) => impl);
-
+	constructor(implementations: Lookup<T>) {
 		this.lexer = new Lexer();
-		this.parser = new Parser(translation_table);
-		this.interpreter = new Interpreter(lookup_table);
+		this.parser = new Parser();
+		this.interpreter = new Interpreter(implementations);
 	}
 
 	public lex = (source: string) => this.lexer.lex(source);

@@ -1,13 +1,12 @@
-import { UnexpectedEndOfExpressionError, UnknownOperatorError, UnreachableError } from './Error';
-import { TOK, Token, ARG, Argument, LookupIndex, TranslationTable } from './types';
+import { UnexpectedEndOfExpressionError, UnreachableError } from './Error';
+import { ARG, TOK } from './enums';
+import type { Token, Argument } from './types';
 
 export class Parser {
-	constructor(private readonly translation_table: TranslationTable) {}
-
 	public parse = (tokens: Token[]): Argument => {
+		const stack: [string | null, Argument[]][] = [];
 		let cursor = 0;
-		const stack: [LookupIndex | null, Argument[]][] = [];
-		let current_op: LookupIndex | null = null;
+		let current_op: string | null = null;
 		let current_args: Argument[] = [];
 
 		while (cursor < tokens.length) {
@@ -19,9 +18,7 @@ export class Parser {
 					current_args = [];
 					break;
 				case TOK.STR:
-					if (current_op === null)
-						if (this.translation_table[token[1]] === undefined) throw new UnknownOperatorError(token[1]);
-						else current_op = this.translation_table[token[1]];
+					if (current_op === null) current_op = token[1];
 					else current_args.push([ARG.LIT, token[1]]);
 					break;
 				case TOK.R_PAR:
