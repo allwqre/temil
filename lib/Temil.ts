@@ -1,16 +1,16 @@
 import { Lexer } from './Lexer';
 import { Parser } from './Parser';
 import { Interpreter } from './Interpreter';
-import type { Argument, Lookup, Token } from './types';
+import type { Argument, Extension, Lookup, Token } from './types';
 
 export class Temil<T> {
 	private readonly lexer;
 	private readonly parser;
 	private readonly interpreter;
 
-	constructor(implementations: Lookup<T>) {
+	constructor(implementations: Lookup<T>, extensions?: Extension[]) {
 		this.lexer = new Lexer();
-		this.parser = new Parser();
+		this.parser = new Parser(extensions);
 		this.interpreter = new Interpreter(implementations);
 	}
 

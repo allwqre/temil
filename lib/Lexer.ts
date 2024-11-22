@@ -1,5 +1,4 @@
-import { UnexpectedEndOfStringError } from './Error';
-import { TOK } from './enums';
+import { ERROR, TOK } from './enums';
 import { Token } from './types';
 
 export class Lexer {
@@ -15,7 +14,7 @@ export class Lexer {
 			next();
 		};
 		const expect = (c: string | undefined, ...e: string[]) => {
-			if (c === undefined) throw new UnexpectedEndOfStringError();
+			if (c === undefined) throw ERROR[ERROR.UNEXPECTED_END_OF_STRING];
 			return e.some((v) => c === v);
 		};
 

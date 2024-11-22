@@ -19,11 +19,14 @@ const add: Implementation = (exec, ctx, args) => {
 	return a + b;
 };
 
-const ip = new Temil({
-	str,
-	num,
-	add,
-});
+const ip = new Temil(
+	{
+		str,
+		num,
+		add,
+	},
+	[[/^\d+$/, (v) => new Number(v).valueOf()]],
+);
 
 console.write('>');
 for await (const line of console) console.write(String(ip.eval(line, null)), '\n>');
