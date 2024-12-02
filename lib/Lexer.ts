@@ -9,10 +9,8 @@ export class Lexer {
 
 		const next = (keep_buffer?: true) => (keep_buffer ? ++cursor : (start = ++cursor));
 		const peek = (n: number = 0) => source.at(cursor + n);
-		const read_token = (type: TOK) => {
-			tokens.push([type, source.slice(start, cursor + 1)]);
-			next();
-		};
+		const read_token = (type: TOK) => tokens.push([type, source.slice(start, cursor)]);
+
 		const expect = (c: string | undefined, ...e: string[]) => {
 			if (c === undefined) throw ERROR[ERROR.UNEXPECTED_END_OF_STRING];
 			return e.some((v) => c === v);
@@ -28,19 +26,22 @@ export class Lexer {
 					break;
 				case '(':
 					read_token(TOK.L_PAR);
+					next();
 					break;
 				case ')':
 					read_token(TOK.R_PAR);
+					next();
 					break;
 				case "'":
 					next();
-					while (!expect(peek(1), "'")) next(true);
+					while (!expect(peek(), "'")) next(true);
 					read_token(TOK.STR);
 					next();
 					break;
 				default:
-					while (!expect(peek(1), ' ', ')', '\r', '\t', '\n')) next(true);
+					while (!expect(peek(), ' ', ')', '\r', '\t', '\n')) next(true);
 					read_token(TOK.STR);
+					next();
 					break;
 			}
 		return tokens;

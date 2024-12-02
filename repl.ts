@@ -2,7 +2,7 @@ import { Temil, Implementation } from './lib/index';
 
 const str: Implementation = (exec, ctx, args) => {
 	if (args.length !== 1) throw new Error();
-	return exec(args[0], ctx);
+	return String(exec(args[0], ctx));
 };
 
 const num: Implementation = (exec, ctx, args) => {
@@ -25,7 +25,11 @@ const ip = new Temil(
 		num,
 		add,
 	},
-	[[/^-?\d+$/, (v) => new Number(v).valueOf()]],
+	[
+		[/^true$/, () => true],
+		[/^false$/, () => false],
+		[/^-?\d+$/, (v) => new Number(v).valueOf()],
+	],
 );
 
 console.write('>');
