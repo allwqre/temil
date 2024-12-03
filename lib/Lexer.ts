@@ -7,16 +7,17 @@ export class Lexer {
 		let start = 0;
 		let cursor = 0;
 
-		const next = (keep_buffer?: true) => (keep_buffer ? ++cursor : (start = ++cursor));
-		const peek = (n: number = 0) => source.at(cursor + n);
+		const next = (keep_buffer: boolean = false) => (keep_buffer ? ++cursor : (start = ++cursor));
+		const peek = () => source.at(cursor);
 		const read_token = (type: TOK) => tokens.push([type, source.slice(start, cursor)]);
+		const discard_buffer = () => (start = cursor);
 
 		const expect = (c: string | undefined, ...e: string[]) => {
 			if (c === undefined) throw ERROR[ERROR.UNEXPECTED_END_OF_STRING];
 			return e.some((v) => c === v);
 		};
 
-		while (peek() !== undefined)
+		while ((discard_buffer(), peek() !== undefined))
 			switch (peek()) {
 				case ' ':
 				case '\r':
@@ -41,7 +42,6 @@ export class Lexer {
 				default:
 					while (!expect(peek(), ' ', ')', '\r', '\t', '\n')) next(true);
 					read_token(TOK.STR);
-					next();
 					break;
 			}
 		return tokens;
